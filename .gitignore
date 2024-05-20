@@ -1,0 +1,5 @@
+.env
+.idea
+logs/app.log
+.env
+.env.test
