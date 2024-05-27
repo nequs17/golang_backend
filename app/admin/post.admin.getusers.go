@@ -19,7 +19,6 @@ type Data_users struct {
 	Verifed  bool   `json:"verifed"`
 }
 
-// C:\Users\e.artemenko\Desktop\drivetest\golang_backend\app\admin\post.admin.getusers.go
 // @Summary Get all users
 // @Description Get all users data
 // @Tags admin
