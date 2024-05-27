@@ -1,0 +1,73 @@
+package main
+
+import (
+	"backend/api"
+	appAdmin "backend/app/admin"
+	appAuth "backend/app/auth"
+	appLogs "backend/app/logs"
+	_ "backend/docs"
+	"fmt"
+	"net/http"
+	"os"
+
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
+)
+
+func main() {
+	Log.Info("Server has been started")
+
+	routerRun()
+}
+
+func routerRun() {
+
+	router := mux.NewRouter()
+
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+
+	router.Handle("/", http.FileServer(http.Dir("./client/public"))) // Путь до Frontend части. |СОБРАННОЙ!|
+
+	// Маршрут для документации Swagger
+	router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
+
+	// Маршрут для отображения документации на странице /openapi
+	router.HandleFunc("/openapi", api.OpenAPI).Methods("GET")
+
+	// admin page
+	router.HandleFunc("/admin/users", appAdmin.AllUsers).Methods("POST") // -> in Dev
+	//router.HandleFunc("/admin/user/accept", appAdmin.Handler).Methods("POST") // -> in Dev
+
+	// user
+	router.HandleFunc("/api/user/register", api.UserRegister).Methods("POST") // <- in Release
+	router.HandleFunc("/api/user/auth", api.UserAuth).Methods("POST")         // <- in Release
+	router.HandleFunc("/api/user/verify", api.UserVerify).Methods("GET")      // <- in Release
+	router.HandleFunc("/api/user/logout", api.UserLogout).Methods("GET")      // <- in Test
+
+	// for testing jwt
+	router.HandleFunc("/api/jwt/test", api.JwtTest).Methods("POST")     // <- in Release
+	router.HandleFunc("/api/jwt/verify", api.JwtVerify).Methods("POST") // <- in Release
+
+	// Sockets
+	router.HandleFunc("/api/sockets/termalmap", api.SocketThermal).Methods("GET")        // <- in Release
+	router.HandleFunc("/api/sockets/termalmapdata", api.SocketThermalOut).Methods("GET") // <- in Release
+
+	// Home page
+
+	router.Use(appLogs.Handler)
+	router.Use(appAuth.Handler)
+
+	port := os.Getenv("SERVER_PORT")
+	if port == "" {
+		port = "8000"
+	}
+
+	err := http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router))
+	if err != nil {
+		fmt.Print(err)
+	}
+
+}
