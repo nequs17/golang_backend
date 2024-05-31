@@ -8,8 +8,8 @@ _Пример работы api http://45.90.218.73:8080/openapi_
 
 Собрка Golang
 ```
-$ go mod tidy
+$ go mod tidy // установка зависимостей
 
-$ go run ./cmd
+$ go run ./cmd // запуск проекта
 
 ```
