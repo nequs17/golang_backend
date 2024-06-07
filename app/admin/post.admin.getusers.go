@@ -19,17 +19,6 @@ type Data_users struct {
 	Verifed  bool   `json:"verifed"`
 }
 
-// @Summary Get all users
-// @Description Get all users data
-// @Tags admin
-// @Accept  json
-// @Produce  json
-// @Success 200 {array} Data
-// @Failure 400 {object} net.Msg
-// @Failure 404 {string} string "No data found for the given ID"
-// @Failure 500 {string} string "Failed to query data: {error}"
-// @Router /admin/users [post]
-
 func AllUsers(w http.ResponseWriter, r *http.Request) {
 	sessions, _ := cookie.Store.Get(r, "session-name")
 	fmt.Println(sessions.Values["role"])
@@ -39,6 +28,7 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
 	var data []Data_users
 
 	if err := database.DB.Table("message_to_data").Find(&data).Error; err != nil {

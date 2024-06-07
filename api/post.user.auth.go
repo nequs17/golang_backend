@@ -38,10 +38,8 @@ type authResponseSuccess struct {
 // @Success 200 {object} authResponseSuccess "Успешная аутентификация"
 // @Failure 400 {object} authResponseError "Ошибка аутентификации"
 // @Router /api/user/auth [post]
-
 func UserAuth(w http.ResponseWriter, r *http.Request) {
 	user := &types.Account{}
-	sessions, _ := cookie.Store.Get(r, "session-name")
 	if err := json.NewDecoder(r.Body).Decode(user); err != nil {
 		net.Respond(w, http.StatusBadRequest, net.Msg{
 			"error": "fault decoding body",
@@ -64,13 +62,16 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-
-		user.UUID = user.GetUUID(user.Email)
+		sessions, _ := cookie.Store.Get(r, "session-name")
+		sessions.Values["authenticated"] = true
+		sessions.Values["username"] = user.GetUUID(user.Email)
+		sessions.Values["role"] = user.GetGroup(user.Email)
+		sessions.Save(r, w)
 		fmt.Println(user.GetGroup(user.Email))
 		net.Respond(w, http.StatusOK, net.Msg{
 			"jwt":   token.JWT,
 			"email": user.Email,
-			"uuid":  user.UUID,
+			"uuid":  user.GetUUID(user.Email),
 		})
 		return
 	}
@@ -88,14 +89,14 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	user.UUID = user.GetUUID(user.Email)
+	sessions, _ := cookie.Store.Get(r, "session-name")
 	sessions.Values["authenticated"] = true
-	sessions.Values["username"] = user.UUID
+	sessions.Values["username"] = user.GetUUID(user.Email)
 	sessions.Values["role"] = user.GetGroup(user.Email)
 	sessions.Save(r, w)
 	net.Respond(w, http.StatusOK, net.Msg{
 		"jwt":   user.Token.JWT,
 		"email": user.Email,
-		"uuid":  user.UUID,
+		"uuid":  user.GetUUID(user.Email),
 	})
 }

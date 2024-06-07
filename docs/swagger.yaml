@@ -1,4 +1,40 @@
 definitions:
+  api.Data:
+    properties:
+      bandwidth:
+        type: string
+      cellID:
+        type: string
+      cqi:
+        type: string
+      latitude:
+        type: string
+      longitude:
+        type: string
+      rsrp:
+        type: string
+      rsrq:
+        type: string
+      rssi:
+        type: string
+      rssnr:
+        type: string
+      time:
+        type: string
+      uuid:
+        type: string
+    type: object
+  api.Data_users:
+    properties:
+      email:
+        type: string
+      group:
+        type: string
+      uuid:
+        type: string
+      verifed:
+        type: boolean
+    type: object
   api.authRequest:
     properties:
       email:
@@ -69,6 +105,33 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/admin/users:
+    post:
+      description: Get all users from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/api.Data_users'
+            type: array
+        "400":
+          description: You not admin
+          schema:
+            type: string
+        "404":
+          description: No data found
+          schema:
+            type: string
+        "500":
+          description: 'Failed to query data: [Error Message]'
+          schema:
+            type: string
+      summary: Get all users
+      tags:
+      - users
   /api/jwt/test:
     post:
       description: Создание JWT токена для пользователя "test_user"
@@ -105,6 +168,83 @@ paths:
           schema:
             $ref: '#/definitions/api.jwtValidationResult'
       summary: Проверка валидности JWT токена
+  /api/sockets/thermalmapdata:
+    get:
+      consumes:
+      - application/json
+      description: This endpoint retrieves thermal data based on query parameters.
+      operationId: socketThermalOut
+      parameters:
+      - description: UUID
+        in: query
+        name: uuid
+        type: string
+      - description: 'Start Time in RFC3339 format (example: 2024-05-18T18:15:00.000+03:00)'
+        in: query
+        name: start_time
+        type: string
+      - description: 'End Time in RFC3339 format (example: 2024-05-18T18:16:00.000+03:00)'
+        in: query
+        name: end_time
+        type: string
+      - description: Latitude
+        in: query
+        name: latitude
+        type: string
+      - description: Longitude
+        in: query
+        name: longitude
+        type: string
+      - description: RSRP
+        in: query
+        name: rsrp
+        type: string
+      - description: RSSI
+        in: query
+        name: rssi
+        type: string
+      - description: RSRQ
+        in: query
+        name: rsrq
+        type: string
+      - description: RSSNR
+        in: query
+        name: rssnr
+        type: string
+      - description: CQI
+        in: query
+        name: cqi
+        type: string
+      - description: Bandwidth
+        in: query
+        name: bandwidth
+        type: string
+      - description: Cell ID
+        in: query
+        name: cell_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of thermal data
+          schema:
+            items:
+              $ref: '#/definitions/api.Data'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "404":
+          description: No data found
+          schema:
+            type: string
+        "500":
+          description: Failed to query or encode data
+          schema:
+            type: string
+      summary: Retrieves thermal data based on query parameters
   /api/user/auth:
     post:
       consumes:
@@ -137,6 +277,18 @@ paths:
           schema:
             $ref: '#/definitions/api.authResponseError'
       summary: Аутентификация пользователя и выдача токена доступа
+  /api/user/logout:
+    get:
+      description: This endpoint logs out a user by invalidating their session.
+      operationId: userLogout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful logout
+          schema:
+            $ref: '#/definitions/net.Msg'
+      summary: Logs out a user
   /api/user/register:
     post:
       consumes:

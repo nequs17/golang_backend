@@ -2,7 +2,6 @@ package main
 
 import (
 	"backend/api"
-	appAdmin "backend/app/admin"
 	appAuth "backend/app/auth"
 	appLogs "backend/app/logs"
 	_ "backend/docs"
@@ -38,7 +37,7 @@ func routerRun() {
 	router.HandleFunc("/openapi", api.OpenAPI).Methods("GET")
 
 	// admin page
-	router.HandleFunc("/admin/users", appAdmin.AllUsers).Methods("POST") // -> in Dev
+	router.HandleFunc("/api/admin/users", api.AllUsers).Methods("POST") // -> in Dev
 	//router.HandleFunc("/admin/user/accept", appAdmin.Handler).Methods("POST") // -> in Dev
 
 	// user
@@ -52,8 +51,9 @@ func routerRun() {
 	router.HandleFunc("/api/jwt/verify", api.JwtVerify).Methods("POST") // <- in Release
 
 	// Sockets
-	router.HandleFunc("/api/sockets/termalmap", api.SocketThermal).Methods("GET")        // <- in Release
-	router.HandleFunc("/api/sockets/termalmapdata", api.SocketThermalOut).Methods("GET") // <- in Release
+	router.HandleFunc("/api/sockets/thermalmap", api.SocketThermal).Methods("GET")                // <- in Release
+	router.HandleFunc("/api/sockets/thermalmapdataall", api.SocketThermalOut).Methods("GET")      // <- in Release
+	router.HandleFunc("/api/sockets/thermalmapdata", api.SocketThermalOutByParams).Methods("GET") // <- in Release
 
 	// Home page
 

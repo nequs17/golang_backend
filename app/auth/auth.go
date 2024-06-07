@@ -8,17 +8,19 @@ import (
 )
 
 var noAuthPages = map[string]bool{
-	"/api/user/auth":             true,
-	"/api/user/register":         true,
-	"/api/user/verify":           true,
-	"/api/jwt/test":              true,
-	"/api/jwt/verify":            true,
-	"/openapi":                   true,
-	"/":                          true,
-	"./client/public":            true,
-	"/api/sockets/termalmap":     true,
-	"/api/sockets/termalmapdata": true,
-	"/admin/users":               true,
+	"/api/user/auth":                 true,
+	"/api/user/register":             true,
+	"/api/user/verify":               true,
+	"/api/jwt/test":                  true,
+	"/api/jwt/verify":                true,
+	"/openapi":                       true,
+	"/":                              true,
+	"./client/public":                true,
+	"/api/sockets/thermalmap":        true,
+	"/api/sockets/thermalmapdata":    true,
+	"/api/admin/users":               true,
+	"/api/user/logout":               true,
+	"/api/sockets/thermalmapdataall": true,
 }
 
 func Handler(next http.Handler) http.Handler {
