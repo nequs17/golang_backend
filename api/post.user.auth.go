@@ -7,6 +7,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	gorilla "github.com/gorilla/sessions"
 )
 
 type authRequest struct {
@@ -25,6 +27,7 @@ type authResponseSuccess struct {
 
 // UserAuth аутентифицирует пользователя и выдает токен доступа.
 //
+// @Tags user
 // @Summary Аутентификация пользователя и выдача токена доступа
 // @Description Производит аутентификацию пользователя на основе предоставленных данных
 // @Description При авторизации без пароля можно произвести авторизацию через Token
@@ -66,6 +69,9 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 		sessions.Values["authenticated"] = true
 		sessions.Values["username"] = user.GetUUID(user.Email)
 		sessions.Values["role"] = user.GetGroup(user.Email)
+		sessions.Options = &gorilla.Options{
+			MaxAge: 60,
+		}
 		sessions.Save(r, w)
 		fmt.Println(user.GetGroup(user.Email))
 		net.Respond(w, http.StatusOK, net.Msg{

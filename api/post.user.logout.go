@@ -8,6 +8,7 @@ import (
 
 // UserLogout logs out a user by invalidating their session.
 //
+// @Tags user
 // @Summary Logs out a user
 // @Description This endpoint logs out a user by invalidating their session.
 // @ID userLogout

@@ -17,9 +17,9 @@ type Data_users struct {
 }
 
 // AllUsers godoc
-// @Summary Get all users
+// @Summary Get all user
 // @Description Get all users from the database
-// @Tags users
+// @Tags admin
 // @Produce  json
 // @Success 200 {array} Data_users
 // @Failure 400 {object} string "You not admin"
@@ -28,33 +28,65 @@ type Data_users struct {
 // @Router /api/admin/users [post]
 func AllUsers(w http.ResponseWriter, r *http.Request) {
 	sessions, _ := cookie.Store.Get(r, "session-name")
-	fmt.Println(sessions.Values["role"])
-	if sessions.Values["role"] != "Admin" {
-		net.Respond(w, http.StatusBadRequest, net.Msg{
-			"error": "You not admin",
-		})
-		return
-	}
-	if sessions.Values["role"] == "Admin" && sessions.Values["authenticated"] == true {
 
+	// Проверяем, аутентифицирован ли пользователь и установлено ли значение роли в сессии
+	authenticated, authOk := sessions.Values["authenticated"].(bool)
+	role, roleOk := sessions.Values["role"].(int)
+
+	if authOk && roleOk && role >= 10 && authenticated {
 		var data []Data_users
 
-		// Query the database for all users
+		// Запрос данных из базы данных для всех пользователей
 		if err := database.DB.Table("accounts").Find(&data).Error; err != nil {
 			http.Error(w, fmt.Sprintf("Failed to query data: %v", err), http.StatusInternalServerError)
 			return
 		}
 
-		// Check if no data is found
+		// Проверка наличия данных
 		if len(data) == 0 {
 			http.Error(w, "No data found", http.StatusNotFound)
 			return
 		}
 
-		// Set response header to JSON and encode data
+		// Устанавливаем заголовок ответа на JSON и кодируем данные
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(data); err != nil {
+			http.Error(w, fmt.Sprintf("Failed to encode data to JSON: %v", err), http.StatusInternalServerError)
+		}
+	} else {
+		net.Respond(w, http.StatusBadRequest, net.Msg{
+			"error": "You are not authorized or not an admin",
+		})
+		return
+	}
+}
+
+/*
+
+sessions, _ := cookie.Store.Get(r, "session-name")
+	if sessions.Values["role"].(int) < 10 && sessions.Values["authenticated"] == false {
+		net.Respond(w, http.StatusBadRequest, net.Msg{
+			"error": "You not admin",
+		})
+		return
+	} else {
+
+		var data []Data_users
+
+		if err := database.DB.Table("message_to_data").Find(&data).Error; err != nil {
+			http.Error(w, fmt.Sprintf("Failed to query data: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		if len(data) == 0 {
+			http.Error(w, "No data found for the given ID", http.StatusNotFound)
+			return
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(data); err != nil {
 			http.Error(w, fmt.Sprintf("Failed to encode data to JSON: %v", err), http.StatusInternalServerError)
 		}
 	}
-}
+
+*/
