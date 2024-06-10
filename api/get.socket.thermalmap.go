@@ -2,7 +2,6 @@ package api
 
 import (
 	"backend/internal/database"
-	"backend/internal/net"
 	"backend/internal/types"
 	"encoding/json"
 	"fmt"
@@ -45,7 +44,6 @@ func SocketThermal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer conn.Close()
-
 	for {
 		_, message, err := conn.ReadMessage()
 		if err != nil {
@@ -60,29 +58,28 @@ func SocketThermal(w http.ResponseWriter, r *http.Request) {
 		}
 
 		token := types.Token{JWT: msg.JWT}
+		isValid, err := token.Verify()
 
-		if result, _ := token.Verify(); !result {
-			net.Respond(w, http.StatusForbidden, net.Msg{
-				"error": "Unauthorized access blocked",
-			})
-			return
+		if !isValid && err != nil {
+			conn.WriteMessage(websocket.TextMessage, []byte("Unauthorized: invalid token"))
+		} else {
+			fmt.Println("Received message:", msg)
+			DataToDB := &types.MessageToData{
+				UUID:      msg.UUID,
+				Time:      msg.Time,
+				Latitude:  msg.Latitude,
+				Longitude: msg.Longitude,
+				Rsrp:      msg.Rsrp,
+				Rssi:      msg.Rssi,
+				Rsrq:      msg.Rsrq,
+				Rssnr:     msg.Rssnr,
+				Cqi:       msg.Cqi,
+				Bandwidth: msg.Bandwidth,
+				CellID:    msg.CellID,
+			}
+			database.DB.Create(&DataToDB)
+			conn.SetReadDeadline(time.Now().Add(300 * time.Second))
 		}
 
-		fmt.Println("Received message:", msg)
-		DataToDB := &types.MessageToData{
-			UUID:      msg.UUID,
-			Time:      msg.Time,
-			Latitude:  msg.Latitude,
-			Longitude: msg.Longitude,
-			Rsrp:      msg.Rsrp,
-			Rssi:      msg.Rssi,
-			Rsrq:      msg.Rsrq,
-			Rssnr:     msg.Rssnr,
-			Cqi:       msg.Cqi,
-			Bandwidth: msg.Bandwidth,
-			CellID:    msg.CellID,
-		}
-		database.DB.Create(&DataToDB)
-		conn.SetReadDeadline(time.Now().Add(300 * time.Second))
 	}
 }

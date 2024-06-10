@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/jinzhu/gorm"
 )
@@ -36,16 +35,9 @@ func ChangeRole(w http.ResponseWriter, r *http.Request) {
 
 		email := r.URL.Query().Get("email")
 		rolestr := r.URL.Query().Get("role")
-
-		role, err := strconv.Atoi(rolestr)
-		if err != nil {
-			http.Error(w, "Invalid role parameter", http.StatusBadRequest)
-			return
-		}
-
 		var editUser Data_users
 
-		if err := database.DB.Table("accounts").Where("email = ?", email).First(&editUser).Update("group", role).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+		if err := database.DB.Table("accounts").Where("email = ?", email).First(&editUser).Update("group", rolestr).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 			http.Error(w, "user not exists", http.StatusBadRequest)
 			return
 		}
