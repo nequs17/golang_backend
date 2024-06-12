@@ -105,42 +105,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/admin/changerole:
-    get:
-      consumes:
-      - application/json
-      operationId: ChangeRole
-      parameters:
-      - description: email
-        in: query
-        name: email
-        type: string
-      - description: role
-        in: query
-        name: role
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: Role
-        "400":
-          description: You not admin
-          schema:
-            type: string
-        "404":
-          description: No data found
-          schema:
-            type: string
-        "500":
-          description: 'Failed to query data: [Error Message]'
-          schema:
-            type: string
-      summary: Change User Role
-      tags:
-      - admin
   /api/admin/users:
     post:
       description: Get all users from the database
@@ -165,9 +129,9 @@ paths:
           description: 'Failed to query data: [Error Message]'
           schema:
             type: string
-      summary: Get all user
+      summary: Get all users
       tags:
-      - admin
+      - users
   /api/jwt/test:
     post:
       description: Создание JWT токена для пользователя "test_user"
@@ -313,8 +277,6 @@ paths:
           schema:
             $ref: '#/definitions/api.authResponseError'
       summary: Аутентификация пользователя и выдача токена доступа
-      tags:
-      - user
   /api/user/logout:
     get:
       description: This endpoint logs out a user by invalidating their session.
@@ -327,8 +289,6 @@ paths:
           schema:
             $ref: '#/definitions/net.Msg'
       summary: Logs out a user
-      tags:
-      - user
   /api/user/register:
     post:
       consumes:
@@ -361,8 +321,6 @@ paths:
           schema:
             $ref: '#/definitions/api.registerResponseError'
       summary: Регистрирует пользователя и выдача токена доступа
-      tags:
-      - user
   /api/user/verify:
     get:
       consumes:

@@ -18,7 +18,6 @@ $ go run my_app
 
 ## Api
 ```
-
 -User
 
 /api/sockets/thermalmapdata - получение информации из БД по параметрам (см. в документации Swagger)

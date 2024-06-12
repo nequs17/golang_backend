@@ -24,7 +24,7 @@ type Account struct {
 	gorm.Model
 	Email    Email  `json:"email" gorm:"primaryKey"`
 	UUID     string `json:UUID gorm:"primaryKey"`
-	Group    int    `json:group`
+	Group    string `json:group`
 	Password string `json:"password"`
 	Verifed  bool   `json:"verifed"`
 	Token    Token  `sql:"-"`
@@ -36,12 +36,17 @@ type VerifyLink struct {
 	Link  string `json:"link"`
 }
 
+func GenerateGroup() string {
+	id := "User"
+	return id
+}
+
 func GenerateUUID() string {
 	id := uuid.New()
 	return id.String()
 }
 
-func (user Account) GetGroup(Email Email) int {
+func (user Account) GetGroup(Email Email) string {
 	tmpUser := Account{}
 	if err := database.DB.Table("accounts").Where("email = ?", user.Email).First(&tmpUser).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		fmt.Errorf("user not exists")
@@ -148,7 +153,7 @@ func USER(email Email, password string, UUID string) Account {
 	cryptoPass, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(cryptoPass)
 	user.UUID = GenerateUUID()
-	user.Group = 1
+	user.Group = GenerateGroup()
 	database.DB.Create(&user)
 
 	return user

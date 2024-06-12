@@ -15,61 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/admin/changerole": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "admin"
-                ],
-                "summary": "Change User Role",
-                "operationId": "ChangeRole",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "email",
-                        "name": "email",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "role",
-                        "name": "role",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "Role"
-                        }
-                    },
-                    "400": {
-                        "description": "You not admin",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "No data found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Failed to query data: [Error Message]",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/api/admin/users": {
             "post": {
                 "description": "Get all users from the database",
@@ -77,9 +22,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "users"
                 ],
-                "summary": "Get all user",
+                "summary": "Get all users",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -290,9 +235,6 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "user"
-                ],
                 "summary": "Аутентификация пользователя и выдача токена доступа",
                 "operationId": "authenticateUser",
                 "parameters": [
@@ -333,9 +275,6 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "user"
-                ],
                 "summary": "Logs out a user",
                 "operationId": "userLogout",
                 "responses": {
@@ -356,9 +295,6 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
-                ],
-                "tags": [
-                    "user"
                 ],
                 "summary": "Регистрирует пользователя и выдача токена доступа",
                 "operationId": "registrationUser",

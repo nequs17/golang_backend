@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
@@ -23,6 +24,10 @@ func routerRun() {
 
 	router := mux.NewRouter()
 
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+
 	router.Handle("/", http.FileServer(http.Dir("./client/public"))) // Путь до Frontend части. |СОБРАННОЙ!|
 
 	// Маршрут для документации Swagger
@@ -32,8 +37,8 @@ func routerRun() {
 	router.HandleFunc("/openapi", api.OpenAPI).Methods("GET")
 
 	// admin page
-	router.HandleFunc("/api/admin/users", api.AllUsers).Methods("POST")       // -> in Dev
-	router.HandleFunc("/api/admin/changerole", api.ChangeRole).Methods("GET") // -> in Dev
+	router.HandleFunc("/api/admin/users", api.AllUsers).Methods("POST") // -> in Dev
+	//router.HandleFunc("/admin/user/accept", appAdmin.Handler).Methods("POST") // -> in Dev
 
 	// user
 	router.HandleFunc("/api/user/register", api.UserRegister).Methods("POST") // <- in Release
@@ -60,7 +65,7 @@ func routerRun() {
 		port = "8000"
 	}
 
-	err := http.ListenAndServe(":"+port, router)
+	err := http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router))
 	if err != nil {
 		fmt.Print(err)
 	}
