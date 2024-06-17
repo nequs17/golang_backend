@@ -204,6 +204,43 @@ paths:
           schema:
             $ref: '#/definitions/api.jwtValidationResult'
       summary: Проверка валидности JWT токена
+  /api/picture/thermalmappic:
+    get:
+      consumes:
+      - application/json
+      description: This endpoint retrieves thermal data based on query parameters.
+      operationId: ThermalMapPicture
+      parameters:
+      - description: 'Start Time in RFC3339 format (example: 2024-05-18T18:15:00.000+03:00)'
+        in: query
+        name: start_time
+        type: string
+      - description: 'End Time in RFC3339 format (example: 2024-05-18T18:16:00.000+03:00)'
+        in: query
+        name: end_time
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of thermal data
+          schema:
+            items:
+              $ref: '#/definitions/api.Data'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "404":
+          description: No data found
+          schema:
+            type: string
+        "500":
+          description: Failed to query or encode data
+          schema:
+            type: string
+      summary: Retrieves thermal data based on query parameters
   /api/sockets/thermalmapdata:
     get:
       consumes:

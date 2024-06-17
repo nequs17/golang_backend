@@ -23,5 +23,5 @@ func init() {
 	database.Connect(os.Getenv("PG_HOST"), os.Getenv("PG_USER"), os.Getenv("PG_DATA"), os.Getenv("PG_PASS"))
 
 	log.Info("Start migrating data")
-	database.DB.AutoMigrate(&types.Account{}, &types.VerifyLink{}, &types.MessageToData{})
+	database.DB.AutoMigrate(&types.Account{}, &types.VerifyLink{}, &types.MessageToData{}, &types.BaseStation{})
 }

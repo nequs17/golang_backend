@@ -35,6 +35,10 @@ func routerRun() {
 	router.HandleFunc("/api/admin/users", api.AllUsers).Methods("POST")       // -> in Dev
 	router.HandleFunc("/api/admin/changerole", api.ChangeRole).Methods("GET") // -> in Dev
 
+	//engineer page
+	router.HandleFunc("/api/engineer/addbasestation", api.AddBaseStation).Methods("POST")       // <- in Release
+	router.HandleFunc("/api/engineer/verifybasestation", api.VerifyBaseStation).Methods("POST") // <- in Release
+
 	// user
 	router.HandleFunc("/api/user/register", api.UserRegister).Methods("POST") // <- in Release
 	router.HandleFunc("/api/user/auth", api.UserAuth).Methods("POST")         // <- in Release
@@ -45,10 +49,11 @@ func routerRun() {
 	router.HandleFunc("/api/jwt/test", api.JwtTest).Methods("POST")     // <- in Release
 	router.HandleFunc("/api/jwt/verify", api.JwtVerify).Methods("POST") // <- in Release
 
-	// Sockets
+	// Thermalmap
 	router.HandleFunc("/api/sockets/thermalmap", api.SocketThermal).Methods("GET")                // <- in Release
 	router.HandleFunc("/api/sockets/thermalmapdataall", api.SocketThermalOut).Methods("GET")      // <- in Release
 	router.HandleFunc("/api/sockets/thermalmapdata", api.SocketThermalOutByParams).Methods("GET") // <- in Release
+	router.HandleFunc("/api/picture/thermalmappic", api.ThermalMapPicture).Methods("GET")         // <- in Release
 
 	// Home page
 

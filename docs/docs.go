@@ -165,6 +165,62 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/picture/thermalmappic": {
+            "get": {
+                "description": "This endpoint retrieves thermal data based on query parameters.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieves thermal data based on query parameters",
+                "operationId": "ThermalMapPicture",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Start Time in RFC3339 format (example: 2024-05-18T18:15:00.000+03:00)",
+                        "name": "start_time",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End Time in RFC3339 format (example: 2024-05-18T18:16:00.000+03:00)",
+                        "name": "end_time",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of thermal data",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/api.Data"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "No data found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to query or encode data",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/sockets/thermalmapdata": {
             "get": {
                 "description": "This endpoint retrieves thermal data based on query parameters.",

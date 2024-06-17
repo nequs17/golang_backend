@@ -22,6 +22,7 @@ var noAuthPages = map[string]bool{
 	"/api/user/logout":               true,
 	"/api/sockets/thermalmapdataall": true,
 	"/api/admin/changerole":          true,
+	"/api/picture/thermalmappic":     true,
 }
 
 func Handler(next http.Handler) http.Handler {
