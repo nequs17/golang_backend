@@ -16,6 +16,16 @@ type BaseStation struct {
 	Verify    bool      `json:"Verify"`
 }
 
+/*
+шина полосы - может поменятся
+номер pci - может поменятся
+проверка БС на актуальность информации
+перезаписанные данные требуется хранить
+запись нескольких технологий (gsm, let, nr и т.п)
+триггерные изменения информации
+
+фиксировать глобальный cellid, если параметр изменился -> запись в срез данных и времени (проверка по таймеру)
+*/
 func (station *BaseStation) Veryfibasestation(lat float64, lon float64, CellID int64) bool {
 	notExists := database.DB.Table("accounts").Where("Latitude = ?", station.Latitude).Where("Longitude = ?", station.Longitude).Where("CellID = ?", station.CellID).First(&Account{}).RecordNotFound()
 	if !notExists {
