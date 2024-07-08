@@ -171,6 +171,7 @@ func (user *Account) Login(jwtAuth bool) error {
 	if err := bcrypt.CompareHashAndPassword([]byte(tmpUser.Password), []byte(user.Password)); err != nil && errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
 		return fmt.Errorf("incorrect password")
 	}
+  
 	user.Token = JWT(string(user.Email), 0)
 	return nil
 }

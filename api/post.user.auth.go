@@ -27,6 +27,7 @@ type authResponseSuccess struct {
 
 // UserAuth аутентифицирует пользователя и выдает токен доступа.
 //
+
 // @Tags user
 // @Summary Аутентификация пользователя и выдача токена доступа
 // @Description Производит аутентификацию пользователя на основе предоставленных данных
@@ -51,6 +52,7 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token := types.Token{JWT: net.RequestToken(r)}
+
 	if result, _ := token.Verify(); result {
 		if !user.Email.IsValid() {
 			net.Respond(w, http.StatusBadRequest, net.Msg{
@@ -65,6 +67,7 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
+
 		sessions, _ := cookie.Store.Get(r, "session-name")
 		sessions.Values["authenticated"] = true
 		sessions.Values["username"] = user.GetUUID(user.Email)
@@ -95,6 +98,7 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+  
 	sessions, _ := cookie.Store.Get(r, "session-name")
 	sessions.Values["authenticated"] = true
 	sessions.Values["username"] = user.GetUUID(user.Email)
