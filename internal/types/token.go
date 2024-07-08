@@ -15,6 +15,10 @@ type Token struct {
 	JWT string `json:"jwt"`
 }
 
+type UUID struct {
+	UUID string `json:"uuid"`
+}
+
 var jwtHeader = `{
 	"typ": "JWT",
 	"alg": "HS256",

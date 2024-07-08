@@ -4,6 +4,102 @@
         "contact": {}
     },
     "paths": {
+        "/api/admin/changerole": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Change User Role",
+                "operationId": "ChangeRole",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "email",
+                        "name": "email",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "role",
+                        "name": "role",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "Role"
+                        }
+                    },
+                    "400": {
+                        "description": "You not admin",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "No data found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to query data: [Error Message]",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/users": {
+            "post": {
+                "description": "Get all users from the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Get all user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/api.Data_users"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "You not admin",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "No data found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to query data: [Error Message]",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/jwt/test": {
             "post": {
                 "description": "Создание JWT токена для пользователя \"test_user\"",
@@ -58,6 +154,178 @@
                 }
             }
         },
+        "/api/picture/thermalmappic": {
+            "get": {
+                "description": "This endpoint retrieves thermal data based on query parameters.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieves thermal data based on query parameters",
+                "operationId": "ThermalMapPicture",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Start Time in RFC3339 format (example: 2024-05-18T18:15:00.000+03:00)",
+                        "name": "start_time",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End Time in RFC3339 format (example: 2024-05-18T18:16:00.000+03:00)",
+                        "name": "end_time",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of thermal data",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/api.Data"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "No data found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to query or encode data",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sockets/thermalmapdata": {
+            "get": {
+                "description": "This endpoint retrieves thermal data based on query parameters.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieves thermal data based on query parameters",
+                "operationId": "socketThermalOut",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UUID",
+                        "name": "uuid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start Time in RFC3339 format (example: 2024-05-18T18:15:00.000+03:00)",
+                        "name": "start_time",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End Time in RFC3339 format (example: 2024-05-18T18:16:00.000+03:00)",
+                        "name": "end_time",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Latitude",
+                        "name": "latitude",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Longitude",
+                        "name": "longitude",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "RSRP",
+                        "name": "rsrp",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "RSSI",
+                        "name": "rssi",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "RSRQ",
+                        "name": "rsrq",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "RSSNR",
+                        "name": "rssnr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "CQI",
+                        "name": "cqi",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bandwidth",
+                        "name": "bandwidth",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cell ID",
+                        "name": "cell_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of thermal data",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/api.Data"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "No data found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to query or encode data",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/auth": {
             "post": {
                 "description": "Производит аутентификацию пользователя на основе предоставленных данных\nПри авторизации без пароля можно произвести авторизацию через Token\nДля этого по аналогии с /api/jwt/verify в поле Authorization нужно разместить ваш значение Bearer: \u003cyour_token\u003e\nEmail всё равно нужно указать для избежания \"призрачных\" аккаунтов, сопоставляется с текущими email",
@@ -66,6 +334,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "user"
                 ],
                 "summary": "Аутентификация пользователя и выдача токена доступа",
                 "operationId": "authenticateUser",
@@ -101,6 +372,27 @@
                 }
             }
         },
+        "/api/user/logout": {
+            "get": {
+                "description": "This endpoint logs out a user by invalidating their session.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Logs out a user",
+                "operationId": "userLogout",
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "schema": {
+                            "$ref": "#/definitions/net.Msg"
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/register": {
             "post": {
                 "description": "Производит аутентификацию пользователя на основе предоставленных данных\nПри авторизации без пароля можно произвести авторизацию через Token\nДля этого по аналогии с /api/jwt/verify в поле Authorization нужно разместить ваш значение Bearer: \u003cyour_token\u003e\nEmail всё равно нужно указать для избежания \"призрачных\" аккаунтов, сопоставляется с текущими email",
@@ -109,6 +401,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "user"
                 ],
                 "summary": "Регистрирует пользователя и выдача токена доступа",
                 "operationId": "registrationUser",
@@ -198,6 +493,61 @@
         }
     },
     "definitions": {
+        "api.Data": {
+            "type": "object",
+            "properties": {
+                "bandwidth": {
+                    "type": "string"
+                },
+                "cellID": {
+                    "type": "string"
+                },
+                "cqi": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "string"
+                },
+                "rsrp": {
+                    "type": "string"
+                },
+                "rsrq": {
+                    "type": "string"
+                },
+                "rssi": {
+                    "type": "string"
+                },
+                "rssnr": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.Data_users": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "group": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "verifed": {
+                    "type": "boolean"
+                }
+            }
+        },
         "api.authRequest": {
             "type": "object",
             "properties": {
@@ -284,6 +634,9 @@
                     "type": "string"
                 },
                 "message": {
+                    "type": "string"
+                },
+                "uuid": {
                     "type": "string"
                 }
             }

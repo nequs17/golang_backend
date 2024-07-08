@@ -1,10 +1,14 @@
 package api
 
 import (
+	"backend/cookie"
 	"backend/internal/net"
 	"backend/internal/types"
 	"encoding/json"
+	"fmt"
 	"net/http"
+
+	gorilla "github.com/gorilla/sessions"
 )
 
 type authRequest struct {
@@ -23,6 +27,8 @@ type authResponseSuccess struct {
 
 // UserAuth аутентифицирует пользователя и выдает токен доступа.
 //
+
+// @Tags user
 // @Summary Аутентификация пользователя и выдача токена доступа
 // @Description Производит аутентификацию пользователя на основе предоставленных данных
 // @Description При авторизации без пароля можно произвести авторизацию через Token
@@ -38,7 +44,6 @@ type authResponseSuccess struct {
 // @Router /api/user/auth [post]
 func UserAuth(w http.ResponseWriter, r *http.Request) {
 	user := &types.Account{}
-
 	if err := json.NewDecoder(r.Body).Decode(user); err != nil {
 		net.Respond(w, http.StatusBadRequest, net.Msg{
 			"error": "fault decoding body",
@@ -63,10 +68,19 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		sessions, _ := cookie.Store.Get(r, "session-name")
+		sessions.Values["authenticated"] = true
+		sessions.Values["username"] = user.GetUUID(user.Email)
+		sessions.Values["role"] = user.GetGroup(user.Email)
+		sessions.Options = &gorilla.Options{
+			MaxAge: 60,
+		}
+		sessions.Save(r, w)
+		fmt.Println(user.GetGroup(user.Email))
 		net.Respond(w, http.StatusOK, net.Msg{
 			"jwt":   token.JWT,
 			"email": user.Email,
-			"uuid":  user.UUID,
+			"uuid":  user.GetUUID(user.Email),
 		})
 		return
 	}
@@ -84,10 +98,15 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-
+  
+	sessions, _ := cookie.Store.Get(r, "session-name")
+	sessions.Values["authenticated"] = true
+	sessions.Values["username"] = user.GetUUID(user.Email)
+	sessions.Values["role"] = user.GetGroup(user.Email)
+	sessions.Save(r, w)
 	net.Respond(w, http.StatusOK, net.Msg{
 		"jwt":   user.Token.JWT,
 		"email": user.Email,
-		"uuid":  user.UUID,
+		"uuid":  user.GetUUID(user.Email),
 	})
 }

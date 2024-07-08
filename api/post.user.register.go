@@ -20,11 +20,13 @@ type registerResponseError struct {
 type registerResponseSuccess struct {
 	Email   string `json:"email"`
 	Jwt     string `json:"jwt"`
+	UUID    string `json:"uuid"`
 	Message string `json:"message"`
 }
 
 // UserRegister регистрирует пользователя и выдает токен доступа.
 //
+// @Tags user
 // @Summary Регистрирует пользователя и выдача токена доступа
 // @Description Производит аутентификацию пользователя на основе предоставленных данных
 // @Description При авторизации без пароля можно произвести авторизацию через Token
@@ -74,7 +76,7 @@ func UserRegister(w http.ResponseWriter, r *http.Request) {
 	net.Respond(w, http.StatusOK, net.Msg{
 		"jwt":     user.Token.JWT,
 		"email":   user.Email,
-		"UUID":    user.UUID,
+		"uuid":    user.UUID,
 		"message": "Check your email",
 	})
 }
