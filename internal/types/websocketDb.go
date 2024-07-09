@@ -92,5 +92,8 @@ type MessageToData2 struct {
 	Nr        Nr        `json:"nr"`
 }
 
+!Оптимизация избыточности!
+
+ *!ключ - global id, к нему линковать всю информацию!*
 
 */
