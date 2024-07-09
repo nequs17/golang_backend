@@ -4,6 +4,7 @@ import (
 	"backend/api"
 	appAuth "backend/app/auth"
 	appLogs "backend/app/logs"
+	appUser "backend/app/user"
 	_ "backend/docs"
 	"fmt"
 	"net/http"
@@ -22,7 +23,6 @@ func main() {
 func routerRun() {
 
 	router := mux.NewRouter()
-
 	router.Handle("/", http.FileServer(http.Dir("./client/public"))) // Путь до Frontend части. |СОБРАННОЙ!|
 
 	// Маршрут для документации Swagger
@@ -31,31 +31,25 @@ func routerRun() {
 	// Маршрут для отображения документации на странице /openapi
 	router.HandleFunc("/openapi", api.OpenAPI).Methods("GET")
 
-	// admin page
-	router.HandleFunc("/api/admin/users", api.AllUsers).Methods("POST")       // -> in Dev
-	router.HandleFunc("/api/admin/changerole", api.ChangeRole).Methods("GET") // -> in Dev
+	// login page and register page (for testing api)
+	router.HandleFunc("/user", appUser.Handler).Methods("GET") // -> in Dev
 
-	//engineer page
-	router.HandleFunc("/api/engineer/addbasestation", api.AddBaseStation).Methods("POST")       // <- in Release
-	router.HandleFunc("/api/engineer/verifybasestation", api.VerifyBaseStation).Methods("POST") // <- in Release
+	// admin page
+	router.HandleFunc("/admin/users", appUser.Handler).Methods("GET")        // -> in Dev
+	router.HandleFunc("/admin/user/accept", appUser.Handler).Methods("POST") // -> in Dev
 
 	// user
 	router.HandleFunc("/api/user/register", api.UserRegister).Methods("POST") // <- in Release
 	router.HandleFunc("/api/user/auth", api.UserAuth).Methods("POST")         // <- in Release
 	router.HandleFunc("/api/user/verify", api.UserVerify).Methods("GET")      // <- in Release
-	router.HandleFunc("/api/user/logout", api.UserLogout).Methods("GET")      // <- in Test
 
 	// for testing jwt
 	router.HandleFunc("/api/jwt/test", api.JwtTest).Methods("POST")     // <- in Release
 	router.HandleFunc("/api/jwt/verify", api.JwtVerify).Methods("POST") // <- in Release
 
-	// Thermalmap
-	router.HandleFunc("/api/sockets/thermalmap", api.SocketThermal).Methods("GET")                // <- in Release
-	router.HandleFunc("/api/sockets/thermalmapdataall", api.SocketThermalOut).Methods("GET")      // <- in Release
-	router.HandleFunc("/api/sockets/thermalmapdata", api.SocketThermalOutByParams).Methods("GET") // <- in Release
-	router.HandleFunc("/api/picture/thermalmappic", api.ThermalMapPicture).Methods("GET")         // <- in Release
-
-	// Home page
+	// Sockets
+	router.HandleFunc("/api/sockets/termalmap", api.SocketThermal).Methods("GET")        // -> in Dev
+	router.HandleFunc("/api/sockets/termalmapdata", api.SocketThermalOut).Methods("GET") // -> in Dev
 
 	router.Use(appLogs.Handler)
 	router.Use(appAuth.Handler)
