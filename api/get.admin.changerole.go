@@ -8,7 +8,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // ChangeRole godoc

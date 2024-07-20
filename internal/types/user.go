@@ -13,9 +13,9 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/gomail.v2"
+	"gorm.io/gorm"
 )
 
 type Email string
@@ -107,8 +107,8 @@ func (email Email) SendMessage(subject string, text string) {
 }
 
 func (user *Account) New() error {
-	notExists := database.DB.Table("accounts").Where("email = ?", user.Email).First(&Account{}).RecordNotFound()
-	if !notExists {
+	notExists := database.DB.Table("accounts").Where("email = ?", user.Email).First(&Account{})
+	if notExists != nil {
 		return fmt.Errorf("user exists")
 	}
 

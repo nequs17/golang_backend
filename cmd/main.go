@@ -23,7 +23,7 @@ func routerRun() {
 
 	router := mux.NewRouter()
 
-	router.Handle("/", http.FileServer(http.Dir("./client/public"))) // Путь до Frontend части. |СОБРАННОЙ!|
+	//router.Handle("/", http.FileServer(http.Dir("./client/public"))) // Путь до Frontend части. |СОБРАННОЙ!|
 
 	// Маршрут для документации Swagger
 	router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
@@ -32,18 +32,21 @@ func routerRun() {
 	router.HandleFunc("/openapi", api.OpenAPI).Methods("GET")
 
 	// admin page
-	router.HandleFunc("/api/admin/users", api.AllUsers).Methods("POST")       // -> in Dev
-	router.HandleFunc("/api/admin/changerole", api.ChangeRole).Methods("GET") // -> in Dev
+	router.HandleFunc("/api/admin/users", api.AllUsers).Methods("POST")       // <- in Release
+	router.HandleFunc("/api/admin/changerole", api.ChangeRole).Methods("GET") // <- in Release
 
 	//engineer page
 	router.HandleFunc("/api/engineer/addbasestation", api.AddBaseStation).Methods("POST")       // <- in Release
 	router.HandleFunc("/api/engineer/verifybasestation", api.VerifyBaseStation).Methods("POST") // <- in Release
+	//router.HandleFunc("/api/engineer/deletebasestation", api.VerifyBaseStation).Methods("POST") // <- in Release
 
 	// user
-	router.HandleFunc("/api/user/register", api.UserRegister).Methods("POST") // <- in Release
-	router.HandleFunc("/api/user/auth", api.UserAuth).Methods("POST")         // <- in Release
-	router.HandleFunc("/api/user/verify", api.UserVerify).Methods("GET")      // <- in Release
-	router.HandleFunc("/api/user/logout", api.UserLogout).Methods("GET")      // <- in Test
+	router.HandleFunc("/api/user/register", api.UserRegister).Methods("POST")       // <- in Release
+	router.HandleFunc("/api/user/auth", api.UserAuth).Methods("POST")               // <- in Release
+	router.HandleFunc("/api/user/verify", api.UserVerify).Methods("GET")            // <- in Release
+	router.HandleFunc("/api/user/logout", api.UserLogout).Methods("GET")            // <- in Release
+	router.HandleFunc("/api/user/postapptrafic", api.PostAppTrafic).Methods("POST") // <- in Test
+	router.HandleFunc("/api/user/getapptrafic", api.GetAppTraffic).Methods("GET")   // <- in Test
 
 	// for testing jwt
 	router.HandleFunc("/api/jwt/test", api.JwtTest).Methods("POST")     // <- in Release
@@ -71,3 +74,9 @@ func routerRun() {
 	}
 
 }
+
+/*
+
+	Добавить роль для ответа при авторизации
+
+*/

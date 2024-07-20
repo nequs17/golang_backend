@@ -111,6 +111,128 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/engineer/addbasestation": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "engineer"
+                ],
+                "summary": "Change User Role",
+                "operationId": "AddBaseStation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "lat",
+                        "name": "Latitude",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "lon",
+                        "name": "Longitude",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "cellid",
+                        "name": "CellID",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "Role"
+                        }
+                    },
+                    "400": {
+                        "description": "You not engineer or admin",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "No data found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to query data: [Error Message]",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engineer/verifybasestation": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "engineer"
+                ],
+                "summary": "Change User Role",
+                "operationId": "verifybasestation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "lat",
+                        "name": "Latitude",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "lon",
+                        "name": "Longitude",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "cellid",
+                        "name": "CellID",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "Role"
+                        }
+                    },
+                    "400": {
+                        "description": "You not engineer or admin",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "No data found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to query data: [Error Message]",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/jwt/test": {
             "post": {
                 "description": "Создание JWT токена для пользователя \"test_user\"",
@@ -167,12 +289,12 @@ const docTemplate = `{
         },
         "/api/picture/thermalmappic": {
             "get": {
-                "description": "This endpoint retrieves thermal data based on query parameters.",
+                "description": "This endpoint retrieves thermal data based on query parameters and returns an image.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
-                    "application/json"
+                    "image/png"
                 ],
                 "summary": "Retrieves thermal data based on query parameters",
                 "operationId": "ThermalMapPicture",
@@ -192,12 +314,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of thermal data",
+                        "description": "Image representing the thermal data",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/api.Data"
-                            }
+                            "type": "file"
                         }
                     },
                     "400": {
@@ -383,6 +502,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/user/getapptrafic": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get App Trafic",
+                "operationId": "GetAppTrafic",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "Traffic"
+                        }
+                    },
+                    "400": {
+                        "description": "No data",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to encode data to JSON: [Error Message]",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/logout": {
             "get": {
                 "description": "This endpoint logs out a user by invalidating their session.",
@@ -399,6 +553,47 @@ const docTemplate = `{
                         "description": "Successful logout",
                         "schema": {
                             "$ref": "#/definitions/net.Msg"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/postapptrafic": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "FORTEST!!!!"
+                ],
+                "summary": "PostAppTrafic",
+                "operationId": "PostAppTrafic",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "Role"
+                        }
+                    },
+                    "400": {
+                        "description": "You not admin",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "No data found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to query data: [Error Message]",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -585,6 +780,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "jwt": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 }
             }

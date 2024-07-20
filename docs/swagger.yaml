@@ -53,6 +53,8 @@ definitions:
         type: string
       jwt:
         type: string
+      role:
+        type: string
     type: object
   api.jwtValidationResult:
     properties:
@@ -168,6 +170,86 @@ paths:
       summary: Get all user
       tags:
       - admin
+  /api/engineer/addbasestation:
+    post:
+      consumes:
+      - application/json
+      operationId: AddBaseStation
+      parameters:
+      - description: lat
+        in: query
+        name: Latitude
+        type: string
+      - description: lon
+        in: query
+        name: Longitude
+        type: string
+      - description: cellid
+        in: query
+        name: CellID
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: Role
+        "400":
+          description: You not engineer or admin
+          schema:
+            type: string
+        "404":
+          description: No data found
+          schema:
+            type: string
+        "500":
+          description: 'Failed to query data: [Error Message]'
+          schema:
+            type: string
+      summary: Change User Role
+      tags:
+      - engineer
+  /api/engineer/verifybasestation:
+    post:
+      consumes:
+      - application/json
+      operationId: verifybasestation
+      parameters:
+      - description: lat
+        in: query
+        name: Latitude
+        type: string
+      - description: lon
+        in: query
+        name: Longitude
+        type: string
+      - description: cellid
+        in: query
+        name: CellID
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: Role
+        "400":
+          description: You not engineer or admin
+          schema:
+            type: string
+        "404":
+          description: No data found
+          schema:
+            type: string
+        "500":
+          description: 'Failed to query data: [Error Message]'
+          schema:
+            type: string
+      summary: Change User Role
+      tags:
+      - engineer
   /api/jwt/test:
     post:
       description: Создание JWT токена для пользователя "test_user"
@@ -208,7 +290,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: This endpoint retrieves thermal data based on query parameters.
+      description: This endpoint retrieves thermal data based on query parameters
+        and returns an image.
       operationId: ThermalMapPicture
       parameters:
       - description: 'Start Time in RFC3339 format (example: 2024-05-18T18:15:00.000+03:00)'
@@ -220,14 +303,12 @@ paths:
         name: end_time
         type: string
       produces:
-      - application/json
+      - image/png
       responses:
         "200":
-          description: List of thermal data
+          description: Image representing the thermal data
           schema:
-            items:
-              $ref: '#/definitions/api.Data'
-            type: array
+            type: file
         "400":
           description: Bad request
           schema:
@@ -352,6 +433,29 @@ paths:
       summary: Аутентификация пользователя и выдача токена доступа
       tags:
       - user
+  /api/user/getapptrafic:
+    get:
+      consumes:
+      - application/json
+      operationId: GetAppTrafic
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: Traffic
+        "400":
+          description: No data
+          schema:
+            type: string
+        "500":
+          description: 'Failed to encode data to JSON: [Error Message]'
+          schema:
+            type: string
+      summary: Get App Trafic
+      tags:
+      - user
   /api/user/logout:
     get:
       description: This endpoint logs out a user by invalidating their session.
@@ -366,6 +470,33 @@ paths:
       summary: Logs out a user
       tags:
       - user
+  /api/user/postapptrafic:
+    post:
+      consumes:
+      - application/json
+      operationId: PostAppTrafic
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: Role
+        "400":
+          description: You not admin
+          schema:
+            type: string
+        "404":
+          description: No data found
+          schema:
+            type: string
+        "500":
+          description: 'Failed to query data: [Error Message]'
+          schema:
+            type: string
+      summary: PostAppTrafic
+      tags:
+      - FORTEST!!!!
   /api/user/register:
     post:
       consumes:

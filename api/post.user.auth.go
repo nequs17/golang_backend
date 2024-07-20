@@ -5,7 +5,6 @@ import (
 	"backend/internal/net"
 	"backend/internal/types"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	gorilla "github.com/gorilla/sessions"
@@ -23,6 +22,7 @@ type authResponseError struct {
 type authResponseSuccess struct {
 	Email string `json:"email"`
 	Jwt   string `json:"jwt"`
+	Role  string `json:"role"`
 }
 
 // UserAuth аутентифицирует пользователя и выдает токен доступа.
@@ -65,19 +65,22 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
+		uuid := user.GetUUID(user.Email)
+		role := user.GetGroup(user.Email)
+
 		sessions, _ := cookie.Store.Get(r, "session-name")
 		sessions.Values["authenticated"] = true
-		sessions.Values["username"] = user.GetUUID(user.Email)
-		sessions.Values["role"] = user.GetGroup(user.Email)
+		sessions.Values["username"] = uuid
+		sessions.Values["role"] = role
 		sessions.Options = &gorilla.Options{
 			MaxAge: 60,
 		}
 		sessions.Save(r, w)
-		fmt.Println(user.GetGroup(user.Email))
 		net.Respond(w, http.StatusOK, net.Msg{
 			"jwt":   token.JWT,
 			"email": user.Email,
-			"uuid":  user.GetUUID(user.Email),
+			"uuid":  uuid,
+			"role":  role,
 		})
 		return
 	}
@@ -95,14 +98,18 @@ func UserAuth(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	uuid := user.GetUUID(user.Email)
+	role := user.GetGroup(user.Email)
+
 	sessions, _ := cookie.Store.Get(r, "session-name")
 	sessions.Values["authenticated"] = true
-	sessions.Values["username"] = user.GetUUID(user.Email)
-	sessions.Values["role"] = user.GetGroup(user.Email)
+	sessions.Values["username"] = uuid
+	sessions.Values["role"] = role
 	sessions.Save(r, w)
 	net.Respond(w, http.StatusOK, net.Msg{
 		"jwt":   user.Token.JWT,
 		"email": user.Email,
-		"uuid":  user.GetUUID(user.Email),
+		"uuid":  uuid,
+		"role":  role,
 	})
 }
