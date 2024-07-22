@@ -340,6 +340,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/sockets/image/base64": {
+            "get": {
+                "description": "Retrieve the uploaded image and return it encoded in base64",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get an uploaded image in base64",
+                "responses": {
+                    "200": {
+                        "description": "Base64 encoded image",
+                        "schema": {
+                            "$ref": "#/definitions/api.ImagePayload"
+                        }
+                    },
+                    "404": {
+                        "description": "Image not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/sockets/thermalmapdata": {
             "get": {
                 "description": "This endpoint retrieves thermal data based on query parameters.",
@@ -456,6 +479,72 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/test/image": {
+            "get": {
+                "description": "Retrieve the uploaded image",
+                "produces": [
+                    "image/png"
+                ],
+                "summary": "Get an uploaded image",
+                "responses": {
+                    "200": {
+                        "description": "Image retrieved successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Image not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/test/upload": {
+            "post": {
+                "description": "Upload an image in base64 format",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Upload an image",
+                "parameters": [
+                    {
+                        "description": "Base64 encoded image",
+                        "name": "image",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.ImagePayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Image uploaded successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Unable to save the image",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/auth": {
             "post": {
                 "description": "Производит аутентификацию пользователя на основе предоставленных данных\nПри авторизации без пароля можно произвести авторизацию через Token\nДля этого по аналогии с /api/jwt/verify в поле Authorization нужно разместить ваш значение Bearer: \u003cyour_token\u003e\nEmail всё равно нужно указать для избежания \"призрачных\" аккаунтов, сопоставляется с текущими email",
@@ -553,47 +642,6 @@ const docTemplate = `{
                         "description": "Successful logout",
                         "schema": {
                             "$ref": "#/definitions/net.Msg"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/postapptrafic": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "FORTEST!!!!"
-                ],
-                "summary": "PostAppTrafic",
-                "operationId": "PostAppTrafic",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "Role"
-                        }
-                    },
-                    "400": {
-                        "description": "You not admin",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "No data found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Failed to query data: [Error Message]",
-                        "schema": {
-                            "type": "string"
                         }
                     }
                 }
@@ -751,6 +799,14 @@ const docTemplate = `{
                 },
                 "verifed": {
                     "type": "boolean"
+                }
+            }
+        },
+        "api.ImagePayload": {
+            "type": "object",
+            "properties": {
+                "image": {
+                    "type": "string"
                 }
             }
         },

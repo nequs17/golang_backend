@@ -58,8 +58,12 @@ func routerRun() {
 	router.HandleFunc("/api/sockets/thermalmapdata", api.SocketThermalOutByParams).Methods("GET") // <- in Release
 	router.HandleFunc("/api/picture/thermalmappic", api.ThermalMapPicture).Methods("GET")         // <- in Release
 
-	// Home page
+	//Image test
+	router.HandleFunc("/api/test/image", api.GetImageHandler).Methods("GET")
+	router.HandleFunc("/api/test/upload", api.UploadHandler).Methods("POST")
+	router.HandleFunc("/api/sockets/image/base64", api.GetImageBase64Handler).Methods("GET")
 
+	// Home page
 	router.Use(appLogs.Handler)
 	router.Use(appAuth.Handler)
 

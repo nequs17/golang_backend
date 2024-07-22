@@ -24,14 +24,14 @@ type MessageToData struct {
 
 /*
 
-type Cdma struct {
-	CellID_Cdma    int64 `json:"cellID"`
-	Rsrp_Cdma      int64 `db:"rsrp" json:"rsrp"`
-	Rssi_Cdma      int64 `db:"rssi" json:"rssi"`
-	Rsrq_Cdma      int64 `db:"rsrq" json:"rsrq"`
-	Rssnr_Cdma     int64 `db:"rssnr" json:"rssnr"`
-	Cqi_Cdma       int64 `db:"cqi" json:"cqi"`
-	Bandwidth_Cdma int64 `db:"bandwidth" json:"bandwidth"`
+type Wcdma struct {
+	CellID_Wcdma    int64 `json:"cellID"`
+	Rsrp_Wcdma      int64 `db:"rsrp" json:"rsrp"`
+	Rssi_Wcdma      int64 `db:"rssi" json:"rssi"`
+	Rsrq_Wcdma      int64 `db:"rsrq" json:"rsrq"`
+	Rssnr_Wcdma     int64 `db:"rssnr" json:"rssnr"`
+	Cqi_Wcdma       int64 `db:"cqi" json:"cqi"`
+	Bandwidth_Wcdma int64 `db:"bandwidth" json:"bandwidth"`
 }
 
 type Gsm struct {
@@ -70,7 +70,7 @@ type MessageToData2 struct {
 	Time      time.Time `json:"time"`
 	Latitude  float64   `json:"latitude"`
 	Longitude float64   `json:"longitude"`
-	Cdma      Cdma      `json:"cdma" gorm:"embedded"`
+	Wcdma      Wcdma      `json:"Wcdma" gorm:"embedded"`
 	Gsm       Gsm       `json:"gsm" gorm:"embedded"`
 	Lte       Lte       `json:"lte" gorm:"embedded"`
 	Nr        Nr        `json:"nr" gorm:"embedded"`
@@ -97,7 +97,7 @@ type GsmData struct {
 	BitErrorRate  uint32 `json:"bitErrorRate"`
 }
 
-type CdmaData struct {
+type WcdmaData struct {
 	ID           uint   `gorm:"primary_key"`
 	RequestID    uint   `gorm:"index"`
 	Registered   bool   `json:"registered"`
@@ -150,15 +150,15 @@ type NRData struct {
 
 type Message2 struct {
 	gorm.Model
-	ID        uint       `gorm:"primary_key"`
-	JWT       string     `json:"jwt"`
-	UUID      string     `json:"UUID"`
-	Time      time.Time  `json:"time"`
-	Latitude  float64    `json:"latitude"`
-	Longitude float64    `json:"longitude"`
-	Operator  string     `json:"operator"`
-	Cdma      []CdmaData `json:"cdma" gorm:"foreignkey:RequestID"`
-	Gsm       []GsmData  `json:"gsm" gorm:"foreignkey:RequestID"`
-	Lte       []LteData  `json:"lte" gorm:"foreignkey:RequestID"`
-	Nr        []NRData   `json:"nr" gorm:"foreignkey:RequestID"`
+	ID        uint        `gorm:"primary_key"`
+	JWT       string      `json:"jwt"`
+	UUID      string      `json:"UUID"`
+	Time      time.Time   `json:"time"`
+	Latitude  float64     `json:"latitude"`
+	Longitude float64     `json:"longitude"`
+	Operator  string      `json:"operator"`
+	Wcdma     []WcdmaData `json:"Wcdma" gorm:"foreignkey:RequestID"`
+	Gsm       []GsmData   `json:"gsm" gorm:"foreignkey:RequestID"`
+	Lte       []LteData   `json:"lte" gorm:"foreignkey:RequestID"`
+	Nr        []NRData    `json:"nr" gorm:"foreignkey:RequestID"`
 }

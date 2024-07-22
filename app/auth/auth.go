@@ -25,6 +25,9 @@ var noAuthPages = map[string]bool{
 	"/api/picture/thermalmappic":     true,
 	"/api/user/postapptrafic":        true,
 	"/api/user/getapptrafic":         true,
+	"/api/test/image":                true,
+	"/api/test/upload":               true,
+	"/api/sockets/image/base64":      true,
 }
 
 func Handler(next http.Handler) http.Handler {

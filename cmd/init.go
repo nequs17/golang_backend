@@ -24,6 +24,6 @@ func init() {
 
 	log.Info("Start migrating data")
 	database.DB.AutoMigrate(&types.Account{}, &types.VerifyLink{}, &types.MessageToData{}, &types.BaseStation{},
-		&types.MessageToData{}, &types.Request{}, &types.TrafficData{}, &types.GsmData{}, &types.CdmaData{}, &types.LteData{}, &types.NRData{}, &types.Message2{})
+		&types.MessageToData{}, &types.Request{}, &types.TrafficData{}, &types.GsmData{}, &types.WcdmaData{}, &types.LteData{}, &types.NRData{}, &types.Message2{})
 
 }
