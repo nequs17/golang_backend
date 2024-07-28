@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"time"
-
+	"fmt"
 	"github.com/gorilla/websocket"
 	//log "github.com/sirupsen/logrus"
 )
@@ -48,10 +48,12 @@ func SocketThermal(w http.ResponseWriter, r *http.Request) {
 	for {
 		var msg types.Message2
 		err := conn.ReadJSON(&msg)
+		fmt.Println(msg)
 		if err != nil {
 			log.Println(err)
 			return
 		}
+		fmt.Println(msg)
 		token := types.Token{JWT: msg.JWT}
 		isValid, err := token.Verify()
 
@@ -82,6 +84,7 @@ func SocketThermal(w http.ResponseWriter, r *http.Request) {
 				database.DB.Create(&DataToDB)
 				conn.SetReadDeadline(time.Now().Add(300 * time.Second))
 			*/
+			fmt.Println(msg)
 			if err := database.DB.Create(&msg).Error; err != nil {
 				log.Fatalf("failed to create request: %v", err)
 			}

@@ -3,13 +3,13 @@ package main
 import (
 	"backend/api"
 	appAuth "backend/app/auth"
+	appCors "backend/app/cors"
 	appLogs "backend/app/logs"
 	_ "backend/docs"
 	"fmt"
 	"net/http"
 	"os"
 
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
@@ -21,11 +21,6 @@ func main() {
 }
 
 func routerRun() {
-
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
-	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
-	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
-
 	router := mux.NewRouter()
 
 	//router.Handle("/", http.FileServer(http.Dir("./client/public"))) // Путь до Frontend части. |СОБРАННОЙ!|
@@ -69,6 +64,7 @@ func routerRun() {
 	router.HandleFunc("/api/sockets/image/base64", api.GetImageBase64Handler).Methods("GET")
 
 	// Home page
+
 	router.Use(appLogs.Handler)
 	router.Use(appAuth.Handler)
 
@@ -77,11 +73,10 @@ func routerRun() {
 		port = "8000"
 	}
 
-	err := http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router))
+	err := http.ListenAndServe(":"+port, appCors.Handler(router))
 	if err != nil {
 		fmt.Print(err)
 	}
-
 }
 
 /*

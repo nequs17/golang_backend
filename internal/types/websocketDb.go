@@ -92,7 +92,7 @@ type GsmData struct {
 	Cid           int32  `json:"cid"`
 	Arfcn         uint16 `json:"arfcn"`
 	Bsic          uint32 `json:"bsic"`
-	Rssi          uint32 `json:"rssi"`
+	Rssi          int32 `json:"rssi"`
 	TimingAdvance uint32 `json:"timingAdvance"`
 	BitErrorRate  uint32 `json:"bitErrorRate"`
 }
@@ -105,7 +105,7 @@ type WcdmaData struct {
 	Mnc          uint16 `json:"mnc"`
 	Lac          int32  `json:"lac"`
 	Cid          int32  `json:"cid"`
-	Rssi         uint32 `json:"rssi"`
+	Rssi         int32 `json:"rssi"`
 	Psc          int32  `json:"psc"`
 	Uarfcn       uint16 `json:"uarfcn"`
 	Rscp         int32  `json:"rscp"`
@@ -150,14 +150,13 @@ type NRData struct {
 
 type Message2 struct {
 	gorm.Model
-	ID        uint        `gorm:"primary_key"`
 	JWT       string      `json:"jwt"`
 	UUID      string      `json:"UUID"`
 	Time      time.Time   `json:"time"`
 	Latitude  float64     `json:"latitude"`
 	Longitude float64     `json:"longitude"`
 	Operator  string      `json:"operator"`
-	Wcdma     []WcdmaData `json:"Wcdma" gorm:"foreignkey:RequestID"`
+	Wcdma     []WcdmaData `json:"wcdma" gorm:"foreignkey:RequestID"`
 	Gsm       []GsmData   `json:"gsm" gorm:"foreignkey:RequestID"`
 	Lte       []LteData   `json:"lte" gorm:"foreignkey:RequestID"`
 	Nr        []NRData    `json:"nr" gorm:"foreignkey:RequestID"`
