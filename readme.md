@@ -15,6 +15,13 @@ $ go build -o my_app ./cmd
 $ go run my_app
 
 ```
+Запуск автотестов
+```
+
+$ go test -v .\internal\types\     
+
+```
+
 
 ## Api
 ```
