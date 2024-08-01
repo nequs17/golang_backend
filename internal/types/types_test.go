@@ -99,7 +99,6 @@ func TestTokenVerify(t *testing.T) {
 		t.Fatal("Expected token to be invalid")
 	}
 
-	// Test token with invalid signature
 	parts := strings.Split(token.JWT, ".")
 	parts[2] = "invalidsignature"
 	invalidToken := Token{JWT: strings.Join(parts, ".")}
